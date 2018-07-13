@@ -420,11 +420,23 @@
           "[ \t]*=[ \t]*"
           "new[ \t]+\\([[:alpha:]_][[:alnum:]_<>\\.]*\\)")))))
 
-  (defun my-statement-cont (langelem)
-    (if (inside-statement-new-brace-p (c-langelem-pos langelem))
-        0
-      '+))
+  ;; =>
+  (defun end-with-fat-arrow-p (pos)
+    (ignore-errors
+      (save-excursion
+        (goto-char pos)
+        (looking-at
+         (concat
+          "\\([[:alnum:]_<>()\\.:+=, \t]*\\)?"
+          "=>[ \t]*$")))))
 
+  (defun my-statement-cont (langelem)
+    (let ((pos (c-langelem-pos langelem)))
+      (if (or (inside-statement-new-brace-p pos)
+              (end-with-fat-arrow-p pos))
+          0
+        '+)))
+    
   ;; : [ID,]*new()
   (defun inside-interface-new-brace-p(pos)
     (ignore-errors
@@ -444,7 +456,7 @@
           "class[ \t]+\\([[:alpha:]_][[:alnum:]_<>\\.]*\\)"
           "[ \t]*"
           "\\([[:alnum:]_<>\\.:, \t]*\\)?"
-          "new()"
+          "new()[ \t]*$"
           )))))
 
   ;; fixing where T : new()
