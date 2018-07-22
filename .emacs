@@ -328,12 +328,17 @@
 
 (when (eq system-type 'darwin)
   (let* ((gopath "/Users/wangjiong/Development/go")
-        (goroot "/Users/wangjiong/Development/gosrc/go1.10"))
-    (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"
-                           ":" gopath "/bin:" goroot "/bin"))
+         (goroot "/Users/wangjiong/Development/gosrc/go1.10")
+         (mysql "/usr/local/mysql"))
+    (setenv "PATH" (concat (getenv "PATH")
+                           ":" "/usr/local/bin"
+                           ":" gopath "/bin"
+                           ":" goroot "/bin"
+                           ":" mysql "/bin"))
     (add-to-list 'exec-path "/usr/local/bin" t)
     (add-to-list 'exec-path (concat gopath "/bin") t)
     (add-to-list 'exec-path (concat goroot "/bin") t)
+    (add-to-list 'exec-path (concat mysql "/bin") t)
     (setenv "GOPATH" gopath)
     (setenv "GOROOT" goroot)))
 
