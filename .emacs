@@ -386,7 +386,9 @@
   (interactive)
 
   (setq auto-mode-alist
-        (append '(("\\.csx$" . csharp-mode)) auto-mode-alist))
+        (append '(("\\.csx$" . csharp-mode))
+                '(("\\.cake$" . csharp-mode))
+                auto-mode-alist))
 
   (add-hook 'csharp-mode-hook 'omnisharp-mode)
 
