@@ -410,7 +410,8 @@
           "enum[ \t]+")))))
 
   (defun my-brace-list-open (langelem)
-    (if (inside-enum-p (c-langelem-pos langelem))
+    (if (or (inside-enum-p (c-langelem-pos langelem))
+            (inside-statement-new-brace-p (c-langelem-pos langelem)))
         '0
       '-)) ;;'+
 
@@ -439,10 +440,11 @@
 
   (defun my-statement-cont (langelem)
     (let ((pos (c-langelem-pos langelem)))
-      (if (or (inside-statement-new-brace-p pos)
-              (end-with-fat-arrow-p pos))
+      (if (inside-statement-new-brace-p pos)
           0
-        '+)))
+        (if (end-with-fat-arrow-p pos)
+            0
+          '+))))
     
   ;; : [ID,]*new()
   (defun inside-interface-new-brace-p(pos)
