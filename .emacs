@@ -411,9 +411,8 @@
 
   (defun my-brace-list-open (langelem)
     (if (or (inside-enum-p (c-langelem-pos langelem))
-            (inside-statement-new-brace-p (c-langelem-pos langelem))
-            (end-with-equal-or-fat-arrow-p (c-langelem-pos langelem)))
-        '0
+            (inside-statement-new-brace-p (c-langelem-pos langelem)))
+        0
       '-)) ;;'+
 
   ;; [[ID.]*ID ]?ID =[>] new [ID.]*ID[<.*>]?.*
@@ -429,15 +428,25 @@
           "[ \t]*=>?[ \t]*"
           "new[ \t]+\\([[:alpha:]_][[:alnum:]_<,>\\.]*\\)")))))
 
-  ;; =[>]
-  (defun end-with-equal-or-fat-arrow-p (pos)
+  ;; =
+  (defun end-with-equal-p (pos)
     (ignore-errors
       (save-excursion
         (goto-char pos)
         (looking-at
          (concat
           "\\([][[:alnum:]_<>()\\.:+=, \t]*\\)?"
-          "=>?[ \t]*$")))))
+          "=[ \t]*$")))))
+
+  ;; =>
+  (defun end-with-fat-arrow-p (pos)
+    (ignore-errors
+      (save-excursion
+        (goto-char pos)
+        (looking-at
+         (concat
+          "\\([][[:alnum:]_<>()\\.:+=, \t]*\\)?"
+          "=>[ \t]*$")))))
 
   (defun my-statement-cont (langelem)
     (let ((pos (c-langelem-pos langelem)))
@@ -475,13 +484,18 @@
     (if (inside-interface-new-brace-p (c-langelem-pos langelem))
         '-
       0))
+
+  (defun my-arglist-close (langelem)
+    (if (end-with-fat-arrow-p (c-langelem-pos langelem))
+        0
+      (c-lineup-arglist langelem)))
   
   (defun fix-c-offsets ()
     (add-to-list 'c-offsets-alist '(topmost-intro-cont . 0))
     (add-to-list 'c-offsets-alist '(brace-list-open    . my-brace-list-open))
     (add-to-list 'c-offsets-alist '(statement-cont     . my-statement-cont))
     (add-to-list 'c-offsets-alist '(class-open         . my-class-open))
-    (add-to-list 'c-offsets-alist '(arglist-close      . 0))
+    (add-to-list 'c-offsets-alist '(arglist-close      . my-arglist-close))
     (add-to-list 'c-offsets-alist '(arglist-intro      . +)))
 
   (add-hook 'csharp-mode-hook 'fix-c-offsets)
