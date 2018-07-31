@@ -411,11 +411,12 @@
 
   (defun my-brace-list-open (langelem)
     (if (or (inside-enum-p (c-langelem-pos langelem))
-            (inside-statement-new-brace-p (c-langelem-pos langelem)))
+            (inside-statement-new-brace-p (c-langelem-pos langelem))
+            (end-with-equal-or-fat-arrow-p (c-langelem-pos langelem)))
         '0
       '-)) ;;'+
 
-  ;; [[ID.]*ID ]?ID = new [ID.]*ID[<.*>]?.*
+  ;; [[ID.]*ID ]?ID =[>] new [ID.]*ID[<.*>]?.*
   ;; {}
   (defun inside-statement-new-brace-p (pos)
     (ignore-errors
@@ -423,26 +424,26 @@
         (goto-char pos)
         (looking-at
          (concat
-          "\\([[:alpha:]_][[:alnum:]_\\.]*[ \t]+\\)?"
+          "\\([[:alpha:]_][[:alnum:]_<,>\\.]*[ \t]+\\)*?"
           "\\([[:alpha:]_][[:alnum:]_]*\\)"
-          "[ \t]*=[ \t]*"
-          "new[ \t]+\\([[:alpha:]_][[:alnum:]_<>\\.]*\\)")))))
+          "[ \t]*=>?[ \t]*"
+          "new[ \t]+\\([[:alpha:]_][[:alnum:]_<,>\\.]*\\)")))))
 
-  ;; =>
-  (defun end-with-fat-arrow-p (pos)
+  ;; =[>]
+  (defun end-with-equal-or-fat-arrow-p (pos)
     (ignore-errors
       (save-excursion
         (goto-char pos)
         (looking-at
          (concat
-          "\\([[:alnum:]_<>()\\.:+=, \t]*\\)?"
-          "=>[ \t]*$")))))
+          "\\([][[:alnum:]_<>()\\.:+=, \t]*\\)?"
+          "=>?[ \t]*$")))))
 
   (defun my-statement-cont (langelem)
     (let ((pos (c-langelem-pos langelem)))
       (if (inside-statement-new-brace-p pos)
           0
-        (if (end-with-fat-arrow-p pos)
+        (if (end-with-equal-or-fat-arrow-p pos)
             0
           '+))))
     
@@ -480,7 +481,8 @@
     (add-to-list 'c-offsets-alist '(brace-list-open    . my-brace-list-open))
     (add-to-list 'c-offsets-alist '(statement-cont     . my-statement-cont))
     (add-to-list 'c-offsets-alist '(class-open         . my-class-open))
-    (add-to-list 'c-offsets-alist '(arglist-close      . 0)))
+    (add-to-list 'c-offsets-alist '(arglist-close      . 0))
+    (add-to-list 'c-offsets-alist '(arglist-intro      . +)))
 
   (add-hook 'csharp-mode-hook 'fix-c-offsets)
 
