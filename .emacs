@@ -599,7 +599,9 @@
                 (define-key python-mode-map (kbd "M-,") 'rope-pop-mark)
                 (define-key python-mode-map (kbd "C-.") 'rope-show-description)
                 (define-key python-mode-map (kbd "C-,") 'rope-show-calltip)
-                (define-key python-mode-map (kbd "C-c C-d") 'rope-show-doc)))))
+                (define-key python-mode-map (kbd "C-c C-d") 'rope-show-doc))))
+
+  (flycheck-mode))
 
 ;; rust
 (defun enable-rust-environment ()
