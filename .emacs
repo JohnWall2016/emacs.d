@@ -391,6 +391,7 @@
                 auto-mode-alist))
 
   (add-hook 'csharp-mode-hook 'omnisharp-mode)
+  (add-hook 'csharp-mode-hook 'flycheck-mode)
 
   (defun inside-enum-p (pos)
     (ignore-errors
@@ -599,9 +600,7 @@
                 (define-key python-mode-map (kbd "M-,") 'rope-pop-mark)
                 (define-key python-mode-map (kbd "C-.") 'rope-show-description)
                 (define-key python-mode-map (kbd "C-,") 'rope-show-calltip)
-                (define-key python-mode-map (kbd "C-c C-d") 'rope-show-doc))))
-
-  (flycheck-mode))
+                (define-key python-mode-map (kbd "C-c C-d") 'rope-show-doc)))))
 
 ;; rust
 (defun enable-rust-environment ()
