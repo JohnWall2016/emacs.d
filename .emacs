@@ -453,7 +453,7 @@
     (let ((pos (c-langelem-pos langelem)))
       (if (inside-statement-new-brace-p pos)
           0
-        (if (end-with-equal-or-fat-arrow-p pos)
+        (if (end-with-equal-p pos)
             0
           '+))))
     
