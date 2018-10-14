@@ -169,7 +169,7 @@
 (defun my-color ()
   (load-theme 'deeper-blue t))
 
-;; M-x list-packages color-theme
+;; M-x package-install color-theme
 ;; http://jblevins.org/git/misc.git/plain/color-theme-less.el
 (add-to-list 'load-path "~/.emacs.d/elpa/color-theme-20080305.34/")
 
@@ -261,7 +261,7 @@
 (electric-indent-mode 1)
 
 ;;; 全局使用company自动补全
-;;M-x list-packages company
+;;M-x package-install company
 (add-hook 'after-init-hook 'global-company-mode)
 (if (eq system-type 'windows-nt)
     (global-set-key (kbd "C-<tab>") 'company-complete-common)
@@ -269,6 +269,11 @@
 
 (setq company-dabbrev-downcase nil)
 (setq company-dabbrev-ignore-case nil)
+
+;;; company fuzzy match
+;; M-x package-install company-flx
+(with-eval-after-load 'company
+  (company-flx-mode +1))
 
 ;; lisp
 (defun my-find-definition ()
@@ -302,7 +307,7 @@
   (message (format-message "%s" (elisp-eldoc-documentation-function))))
 
 ;; golang
-;;M-x list-packages go-mode
+;;M-x package-install go-mode
 ;;go get -u github.com/rogpeppe/godef
 ;;cd go/src
 ;;git clone https://github.com/golang/tools.git golang.org/x/tools
@@ -313,7 +318,7 @@
 ;;go get -u github.com/JohnWall2016/gogetdef
 (require 'gogetdef "~/.emacs.d/gogetdef.el")
 
-;;M-x list-packages company-go
+;;M-x package-install company-go
 ;;go get -u github.com/nsf/gocode
 
 (defun my-godoc (arg)
@@ -342,7 +347,7 @@
     (setenv "GOPATH" gopath)
     (setenv "GOROOT" goroot)))
 
-;;M-x list-packages ggtags-mode
+;;M-x package-install ggtags-mode
 (add-hook 'prog-mode-hook
           (lambda ()
             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'ruby-mode)
@@ -365,7 +370,7 @@
               (define-key lisp-mode-shared-map (kbd "C-c C-d") 'describe-symbol))))
 
 ;; latex
-;; M-x list-packages auctex
+;; M-x package-install auctex
 (add-hook 'text-mode-hook
           (lambda ()
             (when (derived-mode-p 'tex-mode)
@@ -380,7 +385,7 @@
     (add-to-list 'exec-path latex t)))
 
 ;; omnisharp
-; M-x list-packages omnisharp
+; M-x package-install omnisharp
 ; M-x omnisharp-install-server
 (defun enable-omnisharp-environment ()
   (interactive)
@@ -515,6 +520,7 @@
       (add-to-list 'exec-path dotnet-tools t)))
 
   (setq omnisharp-eldoc-support nil)
+  (setq omnisharp-company-match-type 'company-match-server) ; fuzzy match
   ;;(when (eq system-type 'darwin)
   ;;    (setq omnisharp-server-executable-path "/Users/wangjiong/Development/dotnet/omnisharp-roslyn/artifacts/scripts/OmniSharp.Stdio"))
 
@@ -616,7 +622,7 @@
     (setenv "RUST_SRC_PATH" (f-join (s-trim-right (shell-command-to-string
                                                    (format "%s --print sysroot" (executable-find "rustc"))))
                                     "lib/rustlib/src/rust/src"))))
-  ;; M-x list-packages racer
+  ;; M-x package-install racer
   (add-hook 'rust-mode-hook #'racer-mode)
   ;;(add-hook 'racer-mode-hook #'eldoc-mode)
 
@@ -630,7 +636,7 @@
     (interactive)
     (message (format-message "%s" (racer-eldoc))))
 
-  ;; M-x list-packages flycheck-rust
+  ;; M-x package-install flycheck-rust
   ;;(add-hook 'rust-mode-hook #'flycheck-mode)
   ;;(add-hook 'flycheck-mode-hook #'flycheck-rust-setup) 
 
@@ -750,10 +756,10 @@
 (global-set-key (kbd "C-c w j") (quote comment-by-wj))
 
 ;; Dictionary
-;; M-x list-packages bing-dict
+;; M-x package-install bing-dict
 (global-set-key (kbd "C-c d") (quote bing-dict-brief))
 
-;; M-x list-packages osx-dictionary
+;; M-x package-install osx-dictionary
 (if (eq system-type 'darwin)
     (global-set-key (kbd "C-c o") (quote osx-dictionary-search-pointer)))
 
@@ -779,7 +785,7 @@
 
 ;;(require 'sis001 "~/.emacs.d/sis001.el")
 
-;; M-x list-packages chronos
+;; M-x package-install chronos
 (if (eq system-type 'darwin)
     (setq chronos-text-to-speech-program "say"
           chronos-expiry-functions '(chronos-buffer-notify
@@ -801,7 +807,7 @@
 
 (add-to-list 'Info-default-directory-list "~/.emacs.d/info/")
 
-;; M-x list-packages cmake-mode
+;; M-x package-install cmake-mode
 ;(require 'cmake-mode)
 
 (defun my-server-start ()
@@ -824,7 +830,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (dart-mode racer rust-mode nim-mode osx-dictionary company-go company auctex ggtags pt color-theme bing-dict))))
+    (company-flx omnisharp csharp-mode dart-mode racer rust-mode nim-mode osx-dictionary company-go company auctex ggtags pt color-theme bing-dict))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
