@@ -124,6 +124,11 @@
 ;; M-; lisp相关模式下自动添加注释
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;; 输入特殊字符
+;; C-q C-i 横向制表符 \t ^I
+;; C-q C-j 换行符 \n ^J
+;; C-q C-m 回车符 \r ^M
+
 (package-initialize)
 
 ;;; 设置应用包下载服务器
@@ -396,7 +401,7 @@
                 auto-mode-alist))
 
   (add-hook 'csharp-mode-hook 'omnisharp-mode)
-  (add-hook 'csharp-mode-hook 'flycheck-mode)
+  ;;(add-hook 'csharp-mode-hook 'flycheck-mode)
 
   (defun inside-enum-p (pos)
     (ignore-errors
