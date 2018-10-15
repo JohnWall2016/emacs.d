@@ -526,8 +526,8 @@
 
   (setq omnisharp-eldoc-support nil)
   (setq omnisharp-company-match-type 'company-match-server) ; fuzzy match
-  ;;(when (eq system-type 'darwin)
-  ;;    (setq omnisharp-server-executable-path "/Users/wangjiong/Development/dotnet/omnisharp-roslyn/artifacts/scripts/OmniSharp.Stdio"))
+  (when (eq system-type 'darwin)
+      (setq omnisharp-server-executable-path "/Users/wangjiong/Development/dotnet/omnisharp-roslyn/artifacts/scripts/OmniSharp.Stdio"))
 
   (require 'cl-lib)
   (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
