@@ -389,9 +389,10 @@
     (setenv "PATH" (concat (getenv "PATH") ":" latex))
     (add-to-list 'exec-path latex t)))
 
-;; omnisharp
-; M-x package-install omnisharp
-; M-x omnisharp-install-server
+;;;; omnisharp
+;; M-x package-install omnisharp
+;; M-x omnisharp-install-server
+;; replace by https://raw.githubusercontent.com/josteink/csharp-mode/master/csharp-mode.el
 (defun enable-omnisharp-environment ()
   (interactive)
 
@@ -402,114 +403,6 @@
 
   (add-hook 'csharp-mode-hook 'omnisharp-mode)
   ;;(add-hook 'csharp-mode-hook 'flycheck-mode)
-
-  (defun inside-enum-p (pos)
-    (ignore-errors
-      (save-excursion
-        (goto-char pos)
-        (looking-at
-         (concat
-          "\\("
-          "\\(?:"
-          "public\\(?: static\\)?\\|"                  ;; 1. access modifier
-          "private\\(?: static\\)?\\|"
-          "protected\\(?: internal\\)?\\(?: static\\)?\\|"
-          "static\\|"
-          "\\)"
-          "[ \t]+"
-          "\\)?"
-          "enum[ \t]+")))))
-
-  (defun my-brace-list-open (langelem)
-    (if (or (inside-enum-p (c-langelem-pos langelem))
-            (inside-statement-new-brace-p (c-langelem-pos langelem)))
-        0
-      '-)) ;;'+
-
-  ;; [[ID.]*ID ]?ID =[>] new [ID.]*ID[<.*>]?.*
-  ;; {}
-  (defun inside-statement-new-brace-p (pos)
-    (ignore-errors
-      (save-excursion
-        (goto-char pos)
-        (looking-at
-         (concat
-          "\\([[:alpha:]_][[:alnum:]_<,>\\.]*[ \t]+\\)*?"
-          "\\([[:alpha:]_][[:alnum:]_]*\\)"
-          "[ \t]*=>?[ \t]*"
-          "new[ \t]+\\([[:alpha:]_][[:alnum:]_<,>\\.]*\\)")))))
-
-  ;; =
-  (defun end-with-equal-p (pos)
-    (ignore-errors
-      (save-excursion
-        (goto-char pos)
-        (looking-at
-         (concat
-          "\\([][[:alnum:]_<>()\\.:+=, \t]*\\)?"
-          "=[ \t]*$")))))
-
-  ;; =>
-  (defun end-with-fat-arrow-p (pos)
-    (ignore-errors
-      (save-excursion
-        (goto-char pos)
-        (looking-at
-         (concat
-          "\\([][[:alnum:]_<>()\\.:+=, \t]*\\)?"
-          "=>[ \t]*$")))))
-
-  (defun my-statement-cont (langelem)
-    (let ((pos (c-langelem-pos langelem)))
-      (if (inside-statement-new-brace-p pos)
-          0
-        (if (end-with-equal-p pos)
-            0
-          '+))))
-    
-  ;; : [ID,]*new()
-  (defun inside-interface-new-brace-p(pos)
-    (ignore-errors
-      (save-excursion
-        (goto-char pos)
-        (looking-at
-         (concat
-          "\\("
-          "\\(?:"
-          "public\\(?: static\\)?\\|"                  ;; 1. access modifier
-          "private\\(?: static\\)?\\|"
-          "protected\\(?: internal\\)?\\(?: static\\)?\\|"
-          "static\\|"
-          "\\)"
-          "[ \t]+"
-          "\\)?"
-          "class[ \t]+\\([[:alpha:]_][[:alnum:]_<>\\.]*\\)"
-          "[ \t]*"
-          "\\([[:alnum:]_<>\\.:, \t]*\\)?"
-          "new()[ \t]*$"
-          )))))
-
-  ;; fixing where T : new()
-  ;;    {}
-  (defun my-class-open (langelem)
-    (if (inside-interface-new-brace-p (c-langelem-pos langelem))
-        '-
-      0))
-
-  (defun my-arglist-close (langelem)
-    (if (end-with-fat-arrow-p (c-langelem-pos langelem))
-        0
-      (c-lineup-arglist langelem)))
-  
-  (defun fix-c-offsets ()
-    (add-to-list 'c-offsets-alist '(topmost-intro-cont . 0))
-    (add-to-list 'c-offsets-alist '(brace-list-open    . my-brace-list-open))
-    (add-to-list 'c-offsets-alist '(statement-cont     . my-statement-cont))
-    (add-to-list 'c-offsets-alist '(class-open         . my-class-open))
-    (add-to-list 'c-offsets-alist '(arglist-close      . my-arglist-close))
-    (add-to-list 'c-offsets-alist '(arglist-intro      . +)))
-
-  (add-hook 'csharp-mode-hook 'fix-c-offsets)
 
   (eval-after-load
       'company
