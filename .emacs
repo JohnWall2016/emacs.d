@@ -419,8 +419,10 @@
 
   (setq omnisharp-eldoc-support nil)
   (setq omnisharp-company-match-type 'company-match-server) ; fuzzy match
-  (when (eq system-type 'darwin)
-      (setq omnisharp-server-executable-path "/Users/wangjiong/Development/dotnet/omnisharp-roslyn/artifacts/scripts/OmniSharp.Stdio"))
+  (setq omnisharp-server-executable-path
+        (case system-type
+          ('darwin "/Users/wangjiong/Development/dotnet/omnisharp-roslyn/artifacts/scripts/OmniSharp.Stdio")
+          ('windows-nt "E:/Projects/dotnet/omnisharp-roslyn/omnisharp-roslyn/artifacts/publish/OmniSharp.Stdio.Driver/win7-x64/omnisharp.exe")))
 
   (require 'cl-lib)
   (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
