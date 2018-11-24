@@ -389,7 +389,7 @@
     (setenv "PATH" (concat (getenv "PATH") ":" latex))
     (add-to-list 'exec-path latex t)))
 
-(require 'csharp-mode "~/Development/emacs/my-csharp-mode/my-csharp-mode.el")
+(require 'csharp-mode "~/.emacs.d/my-csharp-mode.el")
 
 ;;;; omnisharp
 ;; M-x package-install omnisharp
