@@ -389,6 +389,8 @@
     (setenv "PATH" (concat (getenv "PATH") ":" latex))
     (add-to-list 'exec-path latex t)))
 
+(require 'csharp-mode "~/Development/emacs/my-csharp-mode/my-csharp-mode.el")
+
 ;;;; omnisharp
 ;; M-x package-install omnisharp
 ;; M-x omnisharp-install-server
@@ -469,7 +471,7 @@
                (display-buffer (current-buffer))))))
       (error nil (ignore))))
 
-  (add-hook 'prog-mode-hook
+  (add-hook 'csharp-mode-hook
             (lambda ()
               (when (derived-mode-p 'csharp-mode)
                 (define-key csharp-mode-map (kbd "M-.") 'omnisharp-go-to-definition)
